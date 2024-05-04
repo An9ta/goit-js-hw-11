@@ -15,7 +15,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 60px;
+  height: 75px;
 }
 input {
   padding: 5px;
@@ -36,7 +36,7 @@ h1 {
   justify-content: space-around;
 }
 img {
-  height: 230px;
+  height: 220px;
   display: block;
   max-width: 100%;
   object-fit: cover;
@@ -54,7 +54,11 @@ img {
 .gg-search {
   border-radius: 5px;
   width: 80px;
-  padding: 5px;
+  padding-left: 5px;
+  line-height: 1.5;
+}
+.btn {
+  display: none;
 }
 .load-more {
   display: flex;
