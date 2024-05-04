@@ -51,3 +51,7 @@ img {
   display: flex;
   justify-content: space-between;
 }
+.gg-search {
+  border-radius: 5px;
+  width: 100px;
+}
