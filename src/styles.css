@@ -19,6 +19,8 @@ input {
   border: none;
   border-radius: 10px;
   width: 300px;
+  max-width: 350px;
+  flex: auto;
 }
 button {
   padding: 15px;
@@ -28,6 +30,7 @@ button {
   color: #fff;
   cursor: pointer;
   font-size: 14px;
+  margin-left: 5px;
 }
 .gallery {
   display: flex;
@@ -36,6 +39,7 @@ button {
   justify-content: center;
   padding-left: 20px;
   padding-right: 20px;
+  flex-wrap: wrap;
 }
 .photo-card {
   width: calc(25% - 20px);
