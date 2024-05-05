@@ -15,14 +15,14 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 75px;
+  height: 80px;
 }
 input {
   padding: 5px;
   font-family: inherit;
   border-radius: 5px;
   border: none;
-  width: 300px;
+  width: 280px;
   display: flex;
 }
 h1 {
@@ -54,15 +54,12 @@ img {
 .gg-search {
   border-radius: 5px;
   width: 80px;
-  padding-left: 5px;
-  line-height: 1.5;
-}
-.btn {
-  display: none;
+  padding: 5px;
 }
 .load-more {
-  display: flex;
-  justify-content: center;
   padding: 5px;
   border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+  display: none;
 }
