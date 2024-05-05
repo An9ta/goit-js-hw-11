@@ -1,113 +1,132 @@
-import * as catApi from './pixabay';
+
+import './styles.css';
 import Notiflix from 'notiflix';
-
-// Opisany w dokumentacji
 import SimpleLightbox from 'simplelightbox';
-// Dodatkowy import stylów
 import 'simplelightbox/dist/simple-lightbox.min.css';
+import axios from 'axios';
 
+const searchForm = document.getElementById('search-form');
 const gallery = document.querySelector('.gallery');
-const searchInput = document.querySelector('.search-form input');
-const searchForm = document.querySelector('.search-form');
+const loadMoreBtn = document.querySelector('.load-more');
+const API_KEY = '43717619-dd56b7f6e3d741678eb84a8f8';
+const URL = `https://pixabay.com/api/?key=${API_KEY}&image_type=photo&orientation=horizontal&safesearch=true`;
 
-const lightbox = new SimpleLightbox('.photo-card a', {});
+let page = 1;
+let searchQuery = '';
+const lightbox = new SimpleLightbox('.gallery a');
+searchForm.addEventListener('submit', onSearch);
+loadMoreBtn.addEventListener('click', onLoadMore);
+loadMoreBtn.classList.add('is-hidden');
 
-const moreBtn = document.querySelector('.load-more');
-
-let pageImages = 1;
-let foundImagesCount = null;
-let searchQuery = null;
-let isLoading = false;
-
-async function getImages(searchQuery, page, callback) {
+async function fetchImages() {
   try {
-    const answer = await catApi.searchImage(searchQuery, page);
-    callback(answer);
-
-    const { height: cardHeight } = document
-      .querySelector('.gallery')
-      .firstElementChild.getBoundingClientRect();
-
-    window.scrollBy({
-      top: cardHeight * 2,
-      behavior: 'smooth',
+    const response = await axios.get(URL, {
+      params: {
+        key: API_KEY,
+        q: searchQuery,
+        image_type: 'photo',
+        orientation: 'horizontal',
+        safesearch: true,
+        per_page: 40,
+        page: page,
+      },
     });
-
-    isLoading = false;
+    const { hits, totalHits } = response.data;
+    if (hits.length === 0) {
+      Notiflix.Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+      loadMoreBtn.classList.add('is-hidden');
+    } else if (hits.length > 0 && loadMoreBtn.classList.contains('is-hidden')) {
+      Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+      loadMoreBtn.classList.remove('is-hidden');
+    }
+    return hits;
   } catch (error) {
     Notiflix.Notify.failure(
-      `Sorry, there are no images matching your search query. Please try again.`
+      'Sorry, there was an error fetching the images. Please try again.'
     );
     console.log(error);
   }
 }
-function displayImages(data) {
-  foundImagesCount = data.totalHits;
-  Notiflix.Notify.success(`Hooray! We found ${foundImagesCount} images.`);
-  createPostes(data.hits);
-}
-function addPosts(data) {
-  createPostes(data.hits);
-}
-function moreImages() {
-  const scrollPosition = window.scrollY;
-  const windowHeight = window.innerHeight;
-  const documentHeight = document.documentElement.scrollHeight;
 
-  if (!(scrollPosition + windowHeight >= documentHeight) || isLoading) return;
-
-  isLoading = true;
-  if (checkRemainingImages()) {
-    getImages(searchQuery, ++pageImages, addPosts);
-    return;
-  }
-  Notiflix.Notify.info(
-    'We are sorry, but you have reached the end of search results.'
-  );
+function onSearch(event) {
+  event.preventDefault();
+  clearGallery();
+  searchQuery = event.currentTarget.elements.searchQuery.value.trim();
+  page = 1;
+  fetchImages()
+    .then(renderGallery)
+    .catch(error => console.log(error));
 }
 
-function searchImages(eve) {
-  eve.preventDefault();
-  pageImages = 1;
-  gallery.innerHTML = '';
-  searchQuery = searchInput.value;
-  getImages(searchQuery, pageImages, displayImages);
-  searchInput.value = '';
+function onLoadMore() {
+  page += 1;
+  fetchImages()
+    .then(renderGallery)
+    .then(getBoundingClientRect)
+    .catch(
+      Notiflix.Notify(
+        "We're sorry, but you've reached the end of search results."
+      )
+    );
 }
-function createPostes(images) {
-  const markupImages = images
+
+function getBoundingClientRect() {
+  const { height: cardHeight } =
+    gallery.firstElementChild.getBoundingClientRect();
+  window.scrollBy({
+    top: cardHeight * 2,
+    behavior: 'smooth',
+  });
+}
+
+function renderGallery(images) {
+  const markup = images
     .map(
-      image =>
-        `  
-        <div class="photo-card">
-            <a href="${image.largeImageURL}"><img src="${image.webformatURL}" 
-                        alt="${image.tags}" title="${image.tags}" loading="lazy"/></a>
-            <div class="info">
-                <p class="info-item">
-                    <b>Likes </b>${image.likes}
-                </p>
-                <p class="info-item">
-                    <b>Views </b>${image.views}
-                </p>
-                <p class="info-item">
-                    <b>Comments </b>${image.comments}
-                </p>
-                <p class="info-item">
-                    <b>Downloads </b>${image.downloads}
-                </p>
-            </div>
-        </div>`
+      ({
+        webformatURL,
+        largeImageURL,
+        tags,
+        likes,
+        views,
+        comments,
+        downloads,
+      }) => `
+      <div class="photo-card">
+      <a href="${largeImageURL}">
+      <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+      </a>
+      <div class="info">
+      <p class="info-item">
+      <b>Likes</b> ${likes}
+      </p>
+      <p class="info-item">
+      <b>Views</b> ${views}
+      </p>
+      <p class="info-item">
+      <b>Comments</b> ${comments}
+      </p>
+      <p class="info-item">
+      <b>Downloads</b> ${downloads}
+      </p>
+      </div>
+      </div>
+      `
     )
-    .join(' ');
-  gallery.innerHTML += markupImages;
+    .join('');
+  gallery.insertAdjacentHTML('beforeend', markup);
   lightbox.refresh();
 }
-function checkRemainingImages() {
-  if (pageImages <= foundImagesCount / 20) {
-    return true;
-  }
-  return false;
+
+function clearGallery() {
+  gallery.innerHTML = '';
 }
-catApi.init();
-searchForm.addEventListener('submit', searchImages);
-document.addEventListener('scroll', _.throttle(moreImages, 300));
+
+const { height: cardHeight } =
+  gallery.firstElementChild.getBoundingClientRect();
+
+window.scrollBy({
+  top: cardHeight * 2,
+  behavior: 'smooth',
+});
