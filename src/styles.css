@@ -10,7 +10,7 @@ body {
   justify-content: center;
   margin-bottom: 30px;
   background-color: #798ed3;
-  height: 30px;
+  height: 50px;
   padding: 10px;
   width: 100%;
 }
@@ -43,6 +43,7 @@ body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   overflow: hidden;
+  font-family: inherit;
   transition: transform 0.3s;
   height: 80%;
 }
@@ -67,6 +68,7 @@ body {
 
 .photo-card .info-item b {
   font-weight: bold;
+  font-family: inherit;
 }
 
 .load-more {
