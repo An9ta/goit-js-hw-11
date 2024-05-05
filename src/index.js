@@ -49,7 +49,7 @@ function addPosts(data) {
   createPostes(data.hits);
 }
 function moreImages() {
-  //const scrollPosition = window.pageYOffset;
+  const scrollPosition = window.pageYOffset;
   const windowHeight = window.innerHeight;
   const documentHeight = document.documentElement.scrollHeight;
 
@@ -64,6 +64,7 @@ function moreImages() {
     'We are sorry, but you have reached the end of search results.'
   );
 }
+
 function searchImages(eve) {
   eve.preventDefault();
   pageImages = 1;
