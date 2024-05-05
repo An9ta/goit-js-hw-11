@@ -36,7 +36,7 @@ h1 {
   justify-content: space-around;
 }
 img {
-  height: 220px;
+  height: 210px;
   display: block;
   max-width: 100%;
   object-fit: cover;
@@ -61,5 +61,5 @@ img {
   border-radius: 5px;
   justify-content: center;
   align-items: center;
-  display: none;
+  display: flex;
 }
