@@ -19,7 +19,7 @@ input {
   border: none;
   border-radius: 10px;
   width: 300px;
-  max-width: 350px;
+  max-width: 300px;
   flex: auto;
 }
 button {
