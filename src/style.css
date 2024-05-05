@@ -57,9 +57,5 @@ img {
   padding: 5px;
 }
 .load-more {
-  padding: 5px;
-  border-radius: 5px;
-  justify-content: center;
-  align-items: center;
   display: none;
 }

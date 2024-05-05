@@ -100,7 +100,7 @@ function createPostes(images) {
   lightbox.refresh();
 }
 function checkRemainingImages() {
-  if (pageImages <= foundImagesCount / 20) {
+  if (pageImages <= foundImagesCount / 40) {
     return true;
   }
   return false;
