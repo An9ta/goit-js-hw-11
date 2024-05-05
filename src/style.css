@@ -56,6 +56,14 @@ img {
   width: 80px;
   padding: 5px;
 }
-.load-more {
+.btn {
   display: none;
+}
+.more-btn {
+  display: flex;
+  justify-content: center;
+}
+.load-more {
+  padding: 5px;
+  border-radius: 5px;
 }

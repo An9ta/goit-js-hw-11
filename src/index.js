@@ -9,6 +9,7 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 const gallery = document.querySelector('.gallery');
 const searchInput = document.querySelector('.search-form input');
 const searchForm = document.querySelector('.search-form');
+
 const lightbox = new SimpleLightbox('.photo-card a', {});
 
 const moreBtn = document.querySelector('.load-more');
@@ -79,7 +80,8 @@ function createPostes(images) {
       image =>
         `  
         <div class="photo-card">
-            <a href="${image.largeImageURL}"><img src="${image.webformatURL}" alt="${image.tags}" title="${image.tags}" loading="lazy"/></a>
+            <a href="${image.largeImageURL}"><img src="${image.webformatURL}" 
+                        alt="${image.tags}" title="${image.tags}" loading="lazy"/></a>
             <div class="info">
                 <p class="info-item">
                     <b>Likes </b>${image.likes}
@@ -101,7 +103,7 @@ function createPostes(images) {
   lightbox.refresh();
 }
 function checkRemainingImages() {
-  if (pageImages <= foundImagesCount / 40) {
+  if (pageImages <= foundImagesCount / 20) {
     return true;
   }
   return false;
